@@ -1,4 +1,4 @@
-import { useStorage } from '#storage'
+import { useStorage } from '#internal/nitro'
 
 export function getCacheKey(prefix: string, params: Record<string, any>): string {
   const parts = [prefix]

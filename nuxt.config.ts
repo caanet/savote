@@ -12,6 +12,16 @@ export default defineNuxtConfig({
           'Access-Control-Allow-Origin': '*'
         }
       }
+    },
+    storage: {
+      'redis': {
+        driver: 'redis',
+        /* redis connector options */
+      },
+      'fs': {
+        driver: 'fs',
+        base: './.data/cache'
+      }
     }
   },
 

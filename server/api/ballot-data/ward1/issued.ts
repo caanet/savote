@@ -6,13 +6,34 @@ export default defineEventHandler(async (event) => {
     const startDate = new Date('2024-11-05T07:00:00-08:00') // 7 AM PST on Nov 5, 2024
     const now = new Date()
     
+    const url = 'https://www.ocvote.gov/datacentral/bin/get.php?q=vbm-counts-issued&p=*568-1'
+    
     // Before start date, don't cache
     if (now < startDate) {
-      const response = await fetch('https://www.ocvote.gov/datacentral/bin/get.php?q=vbm-counts-issued&p=*568-1')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (compatible; SAVoteBot/1.0)'
+          }
+        })
+        
+        if (!response.ok) {
+          console.error(`HTTP error! status: ${response.status}`)
+          throw createError({
+            statusCode: response.status,
+            message: `Failed to fetch data: ${response.statusText}`
+          })
+        }
+        
+        return await response.json()
+      } catch (fetchError) {
+        console.error('Fetch error:', fetchError)
+        throw createError({
+          statusCode: 500,
+          message: 'Failed to fetch ballot data: Network error'
+        })
       }
-      return response.json()
     }
 
     // After start date, cache hourly
@@ -30,20 +51,40 @@ export default defineEventHandler(async (event) => {
     }
 
     // If no cache, fetch new data
-    const response = await fetch('https://www.ocvote.gov/datacentral/bin/get.php?q=vbm-counts-issued&p=*568-1')
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; SAVoteBot/1.0)'
+        }
+      })
+      
+      if (!response.ok) {
+        console.error(`HTTP error! status: ${response.status}`)
+        throw createError({
+          statusCode: response.status,
+          message: `Failed to fetch data: ${response.statusText}`
+        })
+      }
+
+      const data = await response.json()
+      
+      // Cache the data for 1 hour
+      await setCache(cacheKey, data, 60 * 60) // 3600 seconds = 1 hour
+
+      return data
+    } catch (fetchError) {
+      console.error('Fetch error:', fetchError)
+      throw createError({
+        statusCode: 500,
+        message: 'Failed to fetch ballot data: Network error'
+      })
     }
-    const data = await response.json()
-
-    // Cache the data for 1 hour
-    await setCache(cacheKey, data, 60 * 60) // 3600 seconds = 1 hour
-
-    return data
   } catch (error) {
+    console.error('General error:', error)
     throw createError({
       statusCode: 500,
-      message: 'Failed to fetch issued ballot data'
+      message: error.message || 'Failed to fetch issued ballot data'
     })
   }
 }) 
