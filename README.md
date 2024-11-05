@@ -1,4 +1,7 @@
-# Nuxt Minimal Starter
+# Santa Ana Ballot Return Tracker
+
+This is a simple web app that tracks the number of ballots returned and issued for each party in Santa Ana's 2024 municipal elections. Developed on nuxt.js, accessing the OC Registrar of Voters' API, and deployed to cloudflare pages.
+
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
