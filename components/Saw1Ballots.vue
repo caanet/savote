@@ -1,41 +1,41 @@
 <template>
-  <div class="ballot-returns">
-    <h2>Santa Ana Ward 1</h2>
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else-if="formattedData.length">
-      <table>
-        <thead>
+  <div class="p-4">
+    <h2 class="text-xl font-bold mb-4">Santa Ana Ward 1</h2>
+    <div v-if="loading" class="text-gray-600">Loading...</div>
+    <div v-else-if="error" class="text-red-600">{{ error }}</div>
+    <div v-else-if="formattedData.length" class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
           <tr>
-            <th>Party</th>
-            <th>Ballots Returned</th>
-            <th>Ballots Issued</th>
-            <th>Return Rate</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ballots Returned</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ballots Issued</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Rate</th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="item in formattedData.slice(0, -1)" :key="item.label">
-            <td>{{ item.label }}</td>
-            <td>{{ item.returned }}</td>
-            <td>{{ item.issued }}</td>
-            <td class="px-6 py-4 text-sm text-gray-900 relative">
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr v-for="item in formattedData.slice(0, -1)" :key="item.label" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.label }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.returned }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.issued }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
               <div 
                 class="absolute inset-0 bg-gradient-to-r from-green-100 to-green-200 opacity-50" 
-                :style="{ width: `${calculatePercentage(item.returned, item.issued)}%` }"
+                :style="{ width: `${item.percentage}%` }"
               ></div>
-              <span class="relative">{{ calculatePercentage(item.returned, item.issued) }}%</span>
+              <span class="relative z-10">{{ item.percentage }}%</span>
             </td>
           </tr>
-          <tr class="total-row">
-            <td class="bold">{{ formattedData[formattedData.length - 1].label }}</td>
-            <td class="bold">{{ formattedData[formattedData.length - 1].returned }}</td>
-            <td class="bold">{{ formattedData[formattedData.length - 1].issued }}</td>
-            <td class="px-6 py-4 text-sm font-bold text-gray-900 relative">
+          <tr class="bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ formattedData[formattedData.length - 1].label }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ formattedData[formattedData.length - 1].returned }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ formattedData[formattedData.length - 1].issued }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 relative">
               <div 
                 class="absolute inset-0 bg-gradient-to-r from-green-100 to-green-200 opacity-50" 
-                :style="{ width: `${calculatePercentage(formattedData[formattedData.length - 1].returned, formattedData[formattedData.length - 1].issued)}%` }"
+                :style="{ width: `${formattedData[formattedData.length - 1].percentage}%` }"
               ></div>
-              <span class="relative">{{ calculatePercentage(formattedData[formattedData.length - 1].returned, formattedData[formattedData.length - 1].issued) }}%</span>
+              <span class="relative z-10">{{ formattedData[formattedData.length - 1].percentage }}%</span>
             </td>
           </tr>
         </tbody>
