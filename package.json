@@ -12,8 +12,10 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "cross-spawn": "^7.0.6",
     "miniflare": "^4.20260317.3",
     "nuxt": "^3.14.0",
+    "picomatch": "^4.0.4",
     "vue": "latest",
     "vue-router": "latest"
   },
@@ -24,6 +26,6 @@
     "nitro-cloudflare-dev": "^0.2.1",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
-    "wrangler": "^3.114.17"
+    "wrangler": "^4.78.0"
   }
 }
